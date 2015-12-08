@@ -98,6 +98,7 @@ angular.module('copayApp.services')
             break;
           case 'WALLET_LOCKED':
             body = gettextCatalog.getString('Wallet is locked');
+            break;
 
           case 'ERROR':
             body = (err.message || err.error);
