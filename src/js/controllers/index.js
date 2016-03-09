@@ -140,9 +140,30 @@ angular.module('copayApp.controllers').controller('indexController', function($r
       self.initGlidera();
 
       self.setCustomBWSFlag();
+
+      if (!self.isComplete) {
+        $log.debug('Wallet not complete BEFORE update... redirecting');
+        go.path('copayers');
+      } else {
+        if ($state.is('copayers')) {
+          $log.debug('Wallet Complete BEFORE update... redirect to home');
+          go.walletHome();
+        }
+      }
+
       profileService.isBackupNeeded(self.walletId, function(needsBackup) {
         self.needsBackup = needsBackup;
-        self.openWallet();
+        self.openWallet(function() {
+          if (!self.isComplete) {
+            $log.debug('Wallet not complete after update... redirecting');
+            go.path('copayers');
+          } else {
+          if ($state.is('copayers')) {
+              $log.debug('Wallet Complete after update... redirect to home');
+              go.walletHome();
+            }
+          }
+        });
       });
     });
   };
@@ -362,6 +383,7 @@ angular.module('copayApp.controllers').controller('indexController', function($r
         $rootScope.$emit('Local/BalanceUpdated', walletStatus.balance);
         $rootScope.$apply();
 
+
         if (opts.triggerTxUpdate && opts.untilItChanges) {
           $timeout(function() {
             self.debounceUpdateHistory();
@@ -369,6 +391,8 @@ angular.module('copayApp.controllers').controller('indexController', function($r
         } else {
           self.loadingWallet = false;
         }
+
+        if (opts.cb) return opts.cb();
       });
     });
   };
@@ -432,7 +456,7 @@ angular.module('copayApp.controllers').controller('indexController', function($r
 
   self.handleError = lodash.debounce(_handleError, 1000);
 
-  self.openWallet = function() {
+  self.openWallet = function(cb) {
     var fc = profileService.focusedClient;
     $timeout(function() {
       $rootScope.$apply();
@@ -446,9 +470,13 @@ angular.module('copayApp.controllers').controller('indexController', function($r
           return;
         }
         $log.debug('Wallet Opened');
+
         self.updateAll(lodash.isObject(walletStatus) ? {
-          walletStatus: walletStatus
-        } : null);
+          walletStatus: walletStatus,
+          cb: cb,
+        } : {
+          cb: cb
+        });
         $rootScope.$apply();
       });
     });
@@ -1333,9 +1361,13 @@ angular.module('copayApp.controllers').controller('indexController', function($r
     }, cb);
   });
 
-  $rootScope.$on('Local/WalletCompleted', function(event) {
-    self.setFocusedWallet();
-    go.walletHome();
+  $rootScope.$on('Local/WalletCompleted', function(event, walletId) {
+    var fc = profileService.focusedClient;
+    if (fc && fc.credentials.walletId == walletId) {
+      // reset main wallet variables
+      self.setFocusedWallet();
+      go.walletHome();
+    }
   });
 
   $rootScope.$on('Local/ProfileCreated', function(event) {
@@ -1441,25 +1473,40 @@ angular.module('copayApp.controllers').controller('indexController', function($r
     self.setBalance(n.data);
   });
 
-  $rootScope.$on('NewOutgoingTx', function() {
-    self.newTx = true;
-    self.updateAll({
-      walletStatus: null,
-      untilItChanges: true,
-      triggerTxUpdate: true,
+
+  //untilItChange TRUE
+  lodash.each(['NewOutgoingTx', 'NewOutgoingTxByThirdParty'], function(eventName) {
+    $rootScope.$on(eventName, function(event) {
+      self.newTx = true;
+      self.updateAll({
+        walletStatus: null,
+        untilItChanges: true,
+        triggerTxUpdate: true,
+      });
     });
   });
 
+  //untilItChange FALSE 
   lodash.each(['NewTxProposal', 'TxProposalFinallyRejected', 'TxProposalRemoved', 'NewOutgoingTxByThirdParty',
-    'Local/NewTxProposal', 'Local/TxProposalAction', 'Local/GlideraTx'
+    'Local/GlideraTx'
   ], function(eventName) {
-    $rootScope.$on(eventName, function(event, untilItChanges) {
-      self.newTx = eventName == 'Local/TxProposalAction' && untilItChanges;
+    $rootScope.$on(eventName, function(event) {
       self.updateAll({
         walletStatus: null,
-        untilItChanges: untilItChanges,
+        untilItChanges: null,
         triggerTxUpdate: true,
       });
+    });
+  });
+
+
+  //untilItChange Maybe
+  $rootScope.$on('Local/TxProposalAction', function(event, untilItChanges) {
+    self.newTx = untilItChanges;
+    self.updateAll({
+      walletStatus: null,
+      untilItChanges: untilItChanges,
+      triggerTxUpdate: true,
     });
   });
 
@@ -1512,6 +1559,7 @@ angular.module('copayApp.controllers').controller('indexController', function($r
           self.startScan(walletId);
         });
         storageService.removeCleanAndScanAddresses(function() {});
+        $rootScope.$emit('Local/NewFocusedWalletReady');
       }
     });
   });
