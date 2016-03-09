@@ -1486,7 +1486,7 @@ angular.module('copayApp.controllers').controller('indexController', function($r
     });
   });
 
-  //untilItChange FALSE 
+  //untilItChange FALSE
   lodash.each(['NewTxProposal', 'TxProposalFinallyRejected', 'TxProposalRemoved', 'NewOutgoingTxByThirdParty',
     'Local/GlideraTx'
   ], function(eventName) {
@@ -1558,11 +1558,12 @@ angular.module('copayApp.controllers').controller('indexController', function($r
         $log.debug('Clear last address cache and Scan ', walletId);
         addressService.expireAddress(walletId, function(err) {
           self.startScan(walletId);
-        });
+        }); << << << < 9 a5b33b9e20ca05e155428bfa3fc3c7f6b386e03
         storageService.removeCleanAndScanAddresses(function() {
           $rootScope.$emit('Local/NewFocusedWalletReady');
         });
-      } else {
+      } else { === === =
+        storageService.removeCleanAndScanAddresses(function() {}); >>> >>> > fixes SHARED Wallet status, and refresh until it changes
         $rootScope.$emit('Local/NewFocusedWalletReady');
       }
     });

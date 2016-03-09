@@ -189,6 +189,13 @@ angular.module('copayApp.services')
       });
     };
 
+
+    root.getProfile = function(cb) {
+      storageService.getProfile(function(err, profile) {
+        return cb(err, profile);
+      });
+    };
+
     root.loadAndBindProfile = function(cb) {
       storageService.getProfile(function(err, profile) {
         if (err) {
