@@ -1108,13 +1108,14 @@ angular.module('copayApp.controllers').controller('walletHomeController', functi
   };
 
   function _paymentTimeControl(expirationTime) {
+    self.paymentExpired = false;
     var countDown;
-    setEpirationTime();
+    setExpirationTime();
     countDown = $interval(function() {
-      setEpirationTime();
+      setExpirationTime();
     }, 1000);
 
-    function setEpirationTime() {
+    function setExpirationTime() {
       if (moment().isAfter(expirationTime * 1000)) {
         setExpiredPaymentValues();
         if (countDown) $interval.cancel(countDown);
