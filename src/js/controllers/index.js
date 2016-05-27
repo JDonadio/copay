@@ -457,7 +457,7 @@ angular.module('copayApp.controllers').controller('indexController', function($r
         }
         $rootScope.$apply();
       });
-    });
+    }, 300);
   };
 
   // This handles errors from BWS/index which normally
