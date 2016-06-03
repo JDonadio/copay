@@ -1,11 +1,9 @@
-<div class="modalMask"></div>
-
-<div class="confirmTxModal" ng-controller="confirmTxController as confirm" ng-init="tx = index.confirmTx.txp">
-
-  <div class="confirmHead" ng-style="{'background-color':index.backgroundColor}">
-    <h1 class="m0 text-center text-white size-18" translate>Send bitcoin</h1>
+  <div class="m20t">
+    <label class="size-14 text-center">
+      <span translate>Send bitcoin</span>
+    </label>
   </div>
-  <div class="p10">
+  <div class="p10 text-center">
     <div class="size-36">{{tx.amountStr}}</div>
     <div class="size-12 label gray radius" ng-show="tx.alternativeAmountStr">{{tx.alternativeAmountStr}}</div>
     <i class="db fi-arrow-down size-24 m10v"></i>
@@ -16,32 +14,31 @@
         Multiple recipients
       </span>
     </div>
-    <div class="m10t size-12" ng-init="confirm.processFee(tx.amount, tx.fee)">
+    <div class="m10t size-12" ng-init="processFee(tx.amount, tx.fee)">
       <div ng-show="!showPercentage" ng-click="showPercentage = true">
-        <span translate>Fee</span> <span class="tl">({{confirm.feeLevel|translate}})</span>: 
+        <span translate>Fee</span> <span class="tl">({{feeLevel|translate}})</span>:
         <span class="text-bold">{{tx.feeStr}}</span>
-        <span class="label gray radius">{{confirm.feeAlternativeStr}}</span>
+        <span class="label gray radius">{{feeAlternativeStr}}</span>
       </div>
       <div ng-show="showPercentage" ng-click="showPercentage = false" translate>
-        {{confirm.feeRateStr}} of the transaction
+        {{feeRateStr}} of the transaction
       </div>
     </div>
     <div class="row m20t">
-      <div class="large-6 medium-6 small-6 columns">
-        <button 
-           ng-click="confirm.close(index.confirmTx.callback)"
-           class="small m10b round outline dark-gray expand" translate>
-          Cancel
+      <div class="small-6 columns">
+        <button
+           ng-click="cancel()"
+           class="round outline dark-gray expand">
+          <span class="size-12" translate>Cancel</span>
         </button>
       </div>
-      <div class="large-6 medium-6 small-6 columns">
-        <button 
-           ng-click="confirm.accept(index.confirmTx.callback)"
-           class="small m10b round expand" 
+      <div class="small-6 columns">
+        <button
+           ng-click="accept()"
+           class="round expand"
            ng-style="{'background-color':index.backgroundColor}" translate>
-          Confirm
+          <span class="size-12" translate>Confirm</span>
         </button>
-      </div> 
+      </div>
     </div>
   </div>
-</div>
