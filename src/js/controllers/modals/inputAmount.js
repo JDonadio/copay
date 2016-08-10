@@ -141,7 +141,7 @@ angular.module('copayApp.controllers').controller('inputAmountController', funct
 
   $scope.finish = function() {
     var _amount = evaluate(format($scope.amount));
-    var amount = $scope.showAlternativeAmount ? fromFiat(_amount).toFixed(unitDecimals) : profileService.formatAmount((_amount * unitToSatoshi), true);
+    var amount = $scope.showAlternativeAmount ? fromFiat(_amount).toFixed(unitDecimals) : _amount;
     var alternativeAmount = $scope.showAlternativeAmount ? _amount : toFiat(_amount);
 
     if (amount % 1 == 0) amount = parseInt(amount);
@@ -160,6 +160,12 @@ angular.module('copayApp.controllers').controller('inputAmountController', funct
         $ionicScrollDelegate.resize();
       }, 100);
     } else {
+      amount = parseFloat(amount);
+      if (amount % 1 === 0) {
+        amount = amount.toFixed(0);
+      } else {
+        amount = amount.toFixed(unitDecimals);
+      }
       self.setAmount(amount, $scope.showAlternativeAmount);
       $scope.cancel();
     }
