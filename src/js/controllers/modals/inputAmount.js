@@ -160,7 +160,12 @@ angular.module('copayApp.controllers').controller('inputAmountController', funct
         $ionicScrollDelegate.resize();
       }, 100);
     } else {
-      amount = amount % 1 != 0 ? amount.toFixed(unitDecimals) : amount;
+      amount = parseFloat(amount);
+      if (amount % 1 === 0) {
+        amount = amount.toFixed(0);
+      } else {
+        amount = amount.toFixed(unitDecimals);
+      }
       self.setAmount(amount, $scope.showAlternativeAmount);
       $scope.cancel();
     }
