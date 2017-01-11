@@ -8,7 +8,7 @@ angular.module('copayApp.controllers').controller('bitpayCardIntroController', f
         email: data.stateParams.email,
         otp: data.stateParams.otp
       };
-      var pairingReason = gettextCatalog.getString('add your BitPay Visa<sup>&reg;</sup> card(s)');
+      var pairingReason = 'add your BitPay Visa<sup>&reg;</sup> card(s)';
       bitpayService.pair(pairData, pairingReason, function(err, paired, apiContext) {
         if (err) {
           popupService.showAlert(gettextCatalog.getString('Error'), err);

@@ -58,26 +58,26 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
   function applyButtonText(multisig) {
     if ($scope.isCordova)
-      $scope.buttonText = 'Slide';
+      $scope.buttonText = gettextCatalog.getString('Slide');
     else
-      $scope.buttonText = 'Click';
+      $scope.buttonText = gettextCatalog.getString('Click');
 
     if (multisig) {
-      $scope.buttonText += ' to accept';
+      $scope.buttonText += gettextCatalog.getString(' to accept');
       return;
     }
 
     if ($scope.isGlidera || $scope.isGiftCard || $scope.cardId) {
-      $scope.buttonText += ' to complete';
+      $scope.buttonText += gettextCatalog.getString(' to complete');
       return;
     }
 
     if ($scope.paypro) {
-      $scope.buttonText += ' to pay';
+      $scope.buttonText += gettextCatalog.getString(' to pay');
       return;
     }
 
-    $scope.buttonText += ' to send';
+    $scope.buttonText += gettextCatalog.getString(' to send');
   };
 
   function setwallets() {

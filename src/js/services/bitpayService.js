@@ -23,18 +23,18 @@ angular.module('copayApp.services').factory('bitpayService', function($log, $htt
    *   email: email address associated with bitpay account
    *   otp: two-factor one-time use password
    * }
-   * 
+   *
    * pairingReason - text string to be embedded into popup message.  If `null` then the reason
    * message is not shown to the UI.
    *   "To {{reason}} you must pair this app with your BitPay account ({{email}})."
-   * 
+   *
    * cb - callback after completion
    *   callback(err, paired, apiContext)
    *
    *   err - something unexpected happened which prevented the pairing
-   * 
+   *
    *   paired - boolean indicating whether the pairing was compledted by the user
-   * 
+   *
    *   apiContext - the context needed for making future api calls
    *   {
    *     token: api token for use in future calls
@@ -45,61 +45,61 @@ angular.module('copayApp.services').factory('bitpayService', function($log, $htt
   root.pair = function(pairData, pairingReason, cb) {
     checkOtp(pairData, function(otp) {
       pairData.otp = otp;
-	    var deviceName = 'Unknown device';
-	    if (platformInfo.isNW) {
-	      deviceName = require('os').platform();
-	    } else if (platformInfo.isCordova) {
-	      deviceName = device.model;
-	    }
-	    var json = {
-	      method: 'createToken',
-	      params: {
-	        secret: pairData.secret,
-	        version: 2,
-	        deviceName: deviceName,
-	        code: pairData.otp
-	      }
-	    };
-	    appIdentityService.getIdentity(root.getEnvironment().network, function(err, appIdentity) {
-	      if (err) return cb(err);
-	      $http(_postAuth('/api/v2/', json, appIdentity)).then(function(data) {
-	        if (data && data.data.error) return cb(data.data.error);
-	        $log.info('BitPay service BitAuth create token: SUCCESS');
-	        var title = gettextCatalog.getString('Add BitPay Account?');
-	        var msgDetail = 'Add this BitPay account ({{email}})?';
-	        if (pairingReason) {
-		        msgDetail = 'To {{reason}} you must first add your BitPay account.<br/><br/>{{email}}';
-		      }
-	        var msg = gettextCatalog.getString(msgDetail, {
-	        	reason: pairingReason,
-	          email: pairData.email
-	        });
-	        var ok = gettextCatalog.getString('Add Account');
-	        var cancel = gettextCatalog.getString('Go back');
-	        popupService.showConfirm(title, msg, ok, cancel, function(res) {
-	        	if (res) {
-			        var acctData = {
+      var deviceName = 'Unknown device';
+      if (platformInfo.isNW) {
+        deviceName = require('os').platform();
+      } else if (platformInfo.isCordova) {
+        deviceName = device.model;
+      }
+      var json = {
+        method: 'createToken',
+        params: {
+          secret: pairData.secret,
+          version: 2,
+          deviceName: deviceName,
+          code: pairData.otp
+        }
+      };
+      appIdentityService.getIdentity(root.getEnvironment().network, function(err, appIdentity) {
+        if (err) return cb(err);
+        $http(_postAuth('/api/v2/', json, appIdentity)).then(function(data) {
+          if (data && data.data.error) return cb(data.data.error);
+          $log.info('BitPay service BitAuth create token: SUCCESS');
+          var title = gettextCatalog.getString('Add BitPay Account?');
+          var msgDetail = 'Add this BitPay account ({{email}})?';
+          if (pairingReason) {
+            msgDetail = 'To {{reason}} you must first add your BitPay account.<br/><br/>{{email}}';
+          }
+          var msg = gettextCatalog.getString(msgDetail, {
+            reason: pairingReason,
+            email: pairData.email
+          });
+          var ok = gettextCatalog.getString('Add Account');
+          var cancel = gettextCatalog.getString('Go back');
+          popupService.showConfirm(title, msg, ok, cancel, function(res) {
+            if (res) {
+              var acctData = {
                 token: data.data.data,
                 email: pairData.email
               };
-							setBitpayAccount(acctData, function(err) {
-					      if (err) return cb(err);
-				        return cb(null, true, {
-				        	token: acctData.token,
-				        	pairData: pairData,
-				        	appIdentity: appIdentity
-				        });
-							});
-	        	} else {
-					    $log.info('User cancelled BitPay pairing process');
-			        return cb(null, false);
-	        	}
-	        });
-	      }, function(data) {
-	        return cb(_setError('BitPay service BitAuth create token: ERROR ', data));
-	      });
-	    });
-	  });
+              setBitpayAccount(acctData, function(err) {
+                if (err) return cb(err);
+                return cb(null, true, {
+                  token: acctData.token,
+                  pairData: pairData,
+                  appIdentity: appIdentity
+                });
+              });
+            } else {
+              $log.info('User cancelled BitPay pairing process');
+              return cb(null, false);
+            }
+          });
+        }, function(data) {
+          return cb(_setError('BitPay service BitAuth create token: ERROR ', data));
+        });
+      });
+    });
   };
 
   root.get = function(endpoint, successCallback, errorCallback) {
@@ -123,7 +123,7 @@ angular.module('copayApp.services').factory('bitpayService', function($log, $htt
 
   var checkOtp = function(pairData, cb) {
     if (pairData.otp) {
-      var msg = gettextCatalog.getString('Enter Two Factor for your BitPay account');
+      var msg = 'Enter Two Factor for your BitPay account';
       popupService.showPrompt(null, msg, null, function(res) {
         cb(res);
       });
@@ -191,5 +191,5 @@ angular.module('copayApp.services').factory('bitpayService', function($log, $htt
   };
 
   return root;
-  
+
 });
