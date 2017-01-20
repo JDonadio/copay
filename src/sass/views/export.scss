@@ -12,4 +12,18 @@
     border-bottom-width: 2px;
     border-bottom-color: #172565;
   }
+  .checkPassword {
+    .icon {
+      float: right;
+      margin-right: 5px;
+      &.valid {
+        padding-top: 3px;
+        color: #13E5B6;
+      }
+      &.invalid {
+        padding-top: 3px;
+        color: #DF2121;
+      }
+    }
+  }
 }
