@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:56154276633:android:c2fe62a57a78ae26",
+        "mobilesdk_app_id": "1:56154276633:android:6de8942b48fea047",
         "android_client_info": {
-          "package_name": "com.bitpay.copaydev"
+          "package_name": "com.bitpay.copay"
         }
       },
       "oauth_client": [
         {
-          "client_id": "56154276633-uvk1f30s09kqdna9g67fcfkn3eif40sk.apps.googleusercontent.com",
+          "client_id": "56154276633-19kept0iddjo478pmlr52qh3o9ehli01.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.bitpay.copaydev",
+            "package_name": "com.bitpay.copay",
             "certificate_hash": "1ac22685d33f7f5d967e0ca8af6c5e93ae4e5374"
           }
         },
@@ -38,19 +38,7 @@
         },
         "appinvite_service": {
           "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "56154276633-ecq4t324dj1kic2evroaf1u7milgl3kn.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.bitpay.walletdev"
-              }
-            },
-            {
-              "client_id": "56154276633-ishjqpmm634tv0h53162smp4sdvtfc38.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
