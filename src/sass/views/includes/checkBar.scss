@@ -1,36 +1,44 @@
-$bar-widths: (
+#check-bar {
+  $bar-widths: (
     info: 3rem,
-    warning: 35%,
+    warn: 35%,
     error: 65%,
     debug: 102%,
   );
-
-  .check-slider {
+  .checkbox-icon {
+    width: 22px;
+    height: 22px;
+  }
+  .checkbox-icon:after {
+    border: none;
+  }
+  .check-bar {
     position: relative;
     @each $name, $bar-width in $bar-widths {
       .initial-bar {
         width: 0%;
-        border: 3px solid $v-success-color;
-        top: 37px;
+        border: 2px solid $v-success-color;
+        top: 40px;
         left: -7px;
         z-index: 99;
         border-radius: 10px;
         position: absolute;
       }
-      .filling-bar--#{$name} {
+      .fill-bar-#{$name} {
         width: $bar-width !important;
-        transition: width 1s;
+        transition: width .2s;
       }
     }
     .base-bar {
       position: absolute;
       width: 100%;
-      border-bottom: 1px solid #f2f2f2;
-      top: 39px;
+      border-bottom: 2px solid #f2f2f2;
+      top: 41px;
       z-index: 98;
       left: 0px;
     }
-    &.list{
+    &.list {
+      margin-top: 20px;
       display: flex;
       justify-content: space-between;
       background-color: white;
@@ -41,7 +49,10 @@ $bar-widths: (
           z-index: 999;
           background-color: inherit;
         }
+        label {
+          padding-top: 30px;
+        }
       }
     }
   }
-  
+}
