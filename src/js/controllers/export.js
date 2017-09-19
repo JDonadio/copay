@@ -126,6 +126,7 @@ angular.module('copayApp.controllers').controller('exportController',
               popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Failed to export'));
               return;
             }
+            profileService.setBackupFlag($scope.wallet.credentials.walletId);
             $ionicHistory.removeBackView();
             $state.go('tabs.home');
           });
